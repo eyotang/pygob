@@ -18,4 +18,5 @@ print(user)
 
 dumper = pygob.Dumper()
 result = dumper.dump(user)
+
 print(list(result))

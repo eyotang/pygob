@@ -196,3 +196,8 @@ def test_person_struct():
     Address = collections.namedtuple('Address', ['Street', 'HouseNumber'])
     assert pygob.load(bytes(data)) == Person(b'Alice', 35,
                                              Address(b'Main St', 17))
+
+def test_user_struct():
+    data = [34, 255, 129, 3, 1, 1, 4, 85, 115, 101, 114, 1, 255, 130, 0, 1, 2, 1, 2, 73, 100, 1, 4, 0, 1, 4, 78, 97, 109, 101, 1, 12, 0, 0, 0, 14, 255, 130, 1, 2, 1, 7, 101, 121, 111, 116, 97, 110, 103, 0]
+    User = collections.namedtuple('User', ['Id', 'Name'])
+    assert pygob.load(bytes(data)) == User(1, b'eyotang')

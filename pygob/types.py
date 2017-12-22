@@ -339,7 +339,7 @@ class GoStruct(GoType):
         values = [self._loader.types[t].zero for (n, t) in self._fields]
         return self._class._make(values)
 
-    def __init__(self, typeid, name, loader, fields):
+    def __init__(self, typeid, name, loader, dumper, fields):
         """A Go struct with a certain set of fields.
 
         The zero value of a GoStruct is based on the zero values of
@@ -356,6 +356,7 @@ class GoStruct(GoType):
         self.typeid = typeid
         self._name = name
         self._loader = loader
+        self._dumper = dumper
         self._fields = fields
         self._class = collections.namedtuple(name, [n for (n, t) in fields])
 
@@ -373,6 +374,9 @@ class GoStruct(GoType):
             values[name] = value
         return self.zero._replace(**values), buf
 
+    def encode(self, value):
+        pass
+
     def __repr__(self):
         """GoStruct representation.
 
@@ -381,6 +385,12 @@ class GoStruct(GoType):
         """
         fields = ['%s=%s' % f for f in self._fields]
         return '<GoStruct %s %s>' % (self._name, ', '.join(fields))
+
+    def typeId(self):
+        return self.typeid
+
+    def setId(self, typeid):
+        self.typeid = typeid
 
 
 class GoWireType(GoStruct):
@@ -414,7 +424,7 @@ class GoWireType(GoStruct):
             name = wire_type.StructT.CommonType.Name.decode('utf-8')
             fields = [(f.Name.decode('utf-8'), f.Id)
                       for f in wire_type.StructT.Field]
-            return GoStruct(typeid, name, self._loader, fields), buf
+            return GoStruct(typeid, name, self._loader, self._dumper, fields), buf
 
         if wire_type.MapT != self._loader.types[MAP_TYPE].zero:
             typeid = wire_type.MapT.CommonType.Id

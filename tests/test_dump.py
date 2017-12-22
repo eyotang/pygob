@@ -1,5 +1,5 @@
 import pytest
-
+import collections
 import pygob
 
 
@@ -68,3 +68,9 @@ def test_str(value, encoded):
 ])
 def test_complex(value, encoded):
     assert pygob.dump(value) == bytes(encoded)
+
+
+def test_user_struct():
+    encoded = [34, 255, 129, 3, 1, 1, 4, 85, 115, 101, 114, 1, 255, 130, 0, 1, 2, 1, 2, 73, 100, 1, 4, 0, 1, 4, 78, 97, 109, 101, 1, 12, 0, 0, 0, 14, 255, 130, 1, 2, 1, 7, 101, 121, 111, 116, 97, 110, 103, 0]
+    User = collections.namedtuple('User', ['Id', 'Name'])
+    assert pygob.dump(User(1, b'eyotang')) == bytes(encoded)

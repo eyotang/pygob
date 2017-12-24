@@ -71,7 +71,11 @@ class Dumper:
             return None
         else:
             go_type = self.newStructType(python_type.__name__)
-            fields = [attr for attr in dir(value) if not callable(getattr(value, attr)) and not attr.startswith("__") and not attr.startswith("_")]
+            fields = []
+            if hasattr(value, '__dict__'):
+                fields = value.__dict__.keys()
+            else:
+                fields = value._fields
             for field in fields:
                 print(getattr(value, field))
 

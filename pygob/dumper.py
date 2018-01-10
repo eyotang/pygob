@@ -50,10 +50,7 @@ class Dumper:
         return typ
 
     def newStructType(self, name):
-        typ = GoStruct(0, name, None, self, [
-            ('CommonType', COMMON_TYPE),
-            ('Field', FIELD_TYPE_SLICE),
-        ])
+        typ = GoStruct(0, name, None, self, [])
         self.setTypeId(typ)
         return typ
 
@@ -77,7 +74,8 @@ class Dumper:
             else:
                 fields = value._fields
             for field in fields:
-                print(getattr(value, field))
+                gt = self.getType(getattr(value, field))
+                go_type._fields.append((field, gt.typeid))
 
         self.types[python_type] = go_type
         self.idToType[go_type.typeId()] = go_type

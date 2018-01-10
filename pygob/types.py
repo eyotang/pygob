@@ -346,7 +346,7 @@ class GoStruct(GoType):
         each field:
 
         >>> from pygob import Loader
-        >>> person = GoStruct(142, 'Person', Loader(), [
+        >>> person = GoStruct(142, 'Person', Loader(), None, [
         ...     ('Name', STRING),
         ...     ('Age', INT),
         ... ])
@@ -375,12 +375,13 @@ class GoStruct(GoType):
         return self.zero._replace(**values), buf
 
     def encode(self, value):
-        pass
+        return b'\x00'
 
     def __repr__(self):
         """GoStruct representation.
 
-        >>> GoStruct(142, 'Person', None, [('Name', STRING), ('Age', INT)])
+        >>> from pygob import Dumper
+        >>> GoStruct(142, 'Person', None, Dumper(), [('Name', STRING), ('Age', INT)])
         <GoStruct Person Name=6, Age=2>
         """
         fields = ['%s=%s' % f for f in self._fields]
